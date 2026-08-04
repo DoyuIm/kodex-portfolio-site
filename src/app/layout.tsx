@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import ChatWidget from "@/components/ChatWidget";
+import UrlCleaner from "@/components/UrlCleaner";
 
 export const metadata: Metadata = {
   title: "Doyu — AI 에이전트 생태계를 만드는 개발자",
@@ -14,7 +16,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className="font-sans">{children}</body>
+      <body className="font-sans">
+        {children}
+        <ChatWidget />
+        <UrlCleaner />
+      </body>
     </html>
   );
 }
