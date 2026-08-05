@@ -38,6 +38,48 @@ export const posts: Post[] = [
     summary: "기능 6개를 추가하고 VS Code 마켓플레이스에 배포한 날",
     slug: "kodex-day-5-marketplace-launch",
   },
+  {
+    day: 6,
+    title: "포트폴리오 사이트를 만들기 시작했다",
+    summary: "Next.js로 포트폴리오 사이트 첫 세 섹션(Hero·Projects·Devlog)을 만든 날",
+    slug: "kodex-day-6-portfolio-site-kickoff",
+  },
+  {
+    day: 7,
+    title: "정적인 페이지에 숨을 불어넣었다",
+    summary: "스티키 네비와 스크롤 애니메이션으로 사이트에 디테일을 더한 날",
+    slug: "kodex-day-7-portfolio-polish",
+  },
+  {
+    day: 8,
+    title: "드디어 진짜 링크가 생겼다",
+    summary: "About·Contact 섹션을 추가하고 Vercel로 실제 배포한 날",
+    slug: "kodex-day-8-live-deploy",
+  },
+  {
+    day: 9,
+    title: "GitHub와 연결하고 자동 배포까지",
+    summary: "GitHub 레포를 Vercel과 연결해 자동 배포(CI/CD)를 완성한 날",
+    slug: "kodex-day-9-github-cd",
+  },
+  {
+    day: 10,
+    title: "AI 에이전트가 디스코드에서도 답한다",
+    summary: "코드 리뷰·블로그 Q&A 에이전트를 디스코드 슬래시 커맨드로 연결한 날",
+    slug: "kodex-day-10-discord-bot",
+  },
+  {
+    day: 11,
+    title: "Phase 4를 마무리하다 — 사용량 제한 두 겹",
+    summary: "디스코드 봇과 챗 위젯에 사용량 제한을 걸어 Phase 4를 마무리한 날",
+    slug: "kodex-day-11-phase4-wrap-up",
+  },
+  {
+    day: 12,
+    title: "11일 만에 만든 AI 에이전트 생태계",
+    summary: "Kodex 프로젝트 회고 — 타임라인부터 배운 점까지 정리한 케이스 스터디",
+    slug: "kodex-day-12-case-study",
+  },
 ];
 
 export function velogUrl(slug: string) {
