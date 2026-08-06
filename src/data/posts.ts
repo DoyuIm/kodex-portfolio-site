@@ -80,6 +80,12 @@ export const posts: Post[] = [
     summary: "Kodex 프로젝트 회고 — 타임라인부터 배운 점까지 정리한 케이스 스터디",
     slug: "kodex-day-12-case-study",
   },
+  {
+    day: 13,
+    title: "이제 임베딩은 신경 안 써도 된다",
+    summary: "GitHub Actions로 RAG 인덱스를 매일 자동 갱신하도록 만든 날",
+    slug: "kodex-day-13-rag-automation",
+  },
 ];
 
 export function velogUrl(slug: string) {

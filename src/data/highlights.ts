@@ -11,4 +11,5 @@ export const highlights: Highlight[] = [
   { range: "Day 8–9", title: "Vercel 실배포 + GitHub 연동 자동 재배포(CI/CD)" },
   { range: "Day 10–11", title: "디스코드 봇 + 포트폴리오 챗 위젯으로 Phase 4 마무리" },
   { range: "Day 12", title: "11일간의 여정을 정리한 케이스 스터디" },
+  { range: "Day 13", title: "GitHub Actions로 RAG 인덱스 자동 갱신" },
 ];
