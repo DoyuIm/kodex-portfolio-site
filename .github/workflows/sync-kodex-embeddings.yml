@@ -1,9 +1,13 @@
-name: Sync Kodex embeddings
+name: Sync Kodex embeddings & devlog
 
-# 벨로그 새 글을 자동으로 반영해서 챗 위젯의 RAG 인덱스(kodex-embeddings.json)를 최신 상태로 유지한다.
+# 벨로그 새 글을 자동으로 반영해서 (1) 챗 위젯의 RAG 인덱스(kodex-embeddings.json)와
+# (2) 사이트 devlog 목록(src/data/posts.ts)을 둘 다 최신 상태로 유지한다.
 # kodex-code-review-agent(스크립트가 있는 저장소)를 체크아웃해서 fetch_posts.py → build_index.py를
-# 그대로 실행하고, 결과를 이 저장소의 src/data/kodex-embeddings.json에 덮어쓴 뒤 변경분만 커밋·푸시한다.
-# 푸시되면 Vercel이 자동으로 재배포한다 (Day9에 연결해둔 GitHub 연동).
+# 그대로 실행하고, 결과를 이 저장소의 src/data/kodex-embeddings.json에 덮어쓴다.
+# 이어서 scripts/sync_devlog.py가 posts.json에서 아직 posts.ts에 없는 "kodex-day-N-..." 슬러그의
+# 새 글을 찾아 Gemini로 title/summary를 생성해 posts.ts에 자동으로 추가한다.
+# (highlights.ts는 여러 날짜를 묶어 사람이 직접 정리하는 영역이라 자동화 대상이 아님)
+# 변경분만 커밋·푸시하고, 푸시되면 Vercel이 자동으로 재배포한다 (Day9에 연결해둔 GitHub 연동).
 
 on:
   schedule:
@@ -51,14 +55,19 @@ jobs:
       - name: Copy embeddings into site data
         run: cp kodex-code-review-agent/embeddings.json src/data/kodex-embeddings.json
 
+      - name: Sync devlog list (posts.ts) with new Velog posts
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python scripts/sync_devlog.py --posts kodex-code-review-agent/posts.json --ts src/data/posts.ts
+
       - name: Commit and push if changed
         run: |
           git config user.name "kodex-bot"
           git config user.email "kodex-bot@users.noreply.github.com"
-          git add src/data/kodex-embeddings.json
+          git add src/data/kodex-embeddings.json src/data/posts.ts
           if git diff --cached --quiet; then
             echo "새 글이 없어서 변경사항이 없어요. 스킵합니다."
           else
-            git commit -m "chore: 벨로그 최신 글로 임베딩 자동 갱신"
+            git commit -m "chore: 벨로그 최신 글로 임베딩·devlog 목록 자동 갱신"
             git push
           fi

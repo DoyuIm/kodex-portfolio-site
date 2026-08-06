@@ -52,14 +52,20 @@ npm run dev
 - 한도 초과 시 실제 Gemini 호출 없이 "GitHub에서 전체 코드를 확인해보세요" 안내로 대체
 - 새 벨로그 글 반영은 아래 "임베딩 자동 갱신" 참고 — 수동으로 할 필요 없음
 
-## 임베딩 자동 갱신 (`.github/workflows/sync-kodex-embeddings.yml`)
+## 임베딩·devlog 자동 갱신 (`.github/workflows/sync-kodex-embeddings.yml`)
 
-챗 위젯이 새 벨로그 글을 자동으로 알게 해주는 GitHub Actions 워크플로예요. 매일 06:00(KST)에 실행되고,
-Actions 탭에서 수동으로도 바로 돌릴 수 있어요(`workflow_dispatch`).
+챗 위젯과 devlog 목록이 새 벨로그 글을 자동으로 알게 해주는 GitHub Actions 워크플로예요. 매일 06:00(KST)에
+실행되고, Actions 탭에서 수동으로도 바로 돌릴 수 있어요(`workflow_dispatch`).
 
 동작 순서: `kodex-code-review-agent` 저장소를 체크아웃 → `fetch_posts.py`로 최신 벨로그 글 수집 →
 `build_index.py`로 증분 임베딩(안 바뀐 글은 재임베딩하지 않음) → 결과를 `src/data/kodex-embeddings.json`에
-덮어쓰기 → 바뀐 게 있으면만 커밋·푸시. 푸시되면 Vercel이 알아서 재배포해요.
+덮어쓰기 → `scripts/sync_devlog.py`가 아직 `posts.ts`에 없는 `kodex-day-N-...` 슬러그의 새 글을 찾아
+Gemini로 title/summary를 생성해서 `src/data/posts.ts`에 자동 추가 → 바뀐 게 있으면만 커밋·푸시.
+푸시되면 Vercel이 알아서 재배포해요.
+
+`highlights.ts`(About 섹션의 날짜 범위별 하이라이트)는 여러 날짜를 묶어 사람이 직접 정리하는 영역이라
+자동화 대상이 아니에요 — 계속 손으로 추가해야 해요. `posts.ts`에 자동 생성된 title/summary도 가끔은
+어색할 수 있어서, 봇 커밋이 올라오면 한 번씩 문구를 확인해보는 걸 권장해요.
 
 **한 번만 하면 되는 설정**: 이 저장소(`kodex-portfolio-site`)의 GitHub Settings → Secrets and variables →
 Actions에 `GEMINI_API_KEY` 시크릿을 등록해야 해요. `gh` CLI가 있다면:
@@ -79,4 +85,5 @@ Vercel CLI로 배포되어 있어요 (`vercel` → `vercel --prod`). GitHub 레�
 - [x] GitHub 레포로 분리해서 푸시
 - [x] Vercel 프로젝트와 GitHub 레포 연결 (자동 재배포)
 - 커스텀 도메인은 보류 (지금은 기본 `.vercel.app` 주소 사용)
-- [ ] 벨로그 새 글 쓸 때마다 `src/data/posts.ts`, `src/data/highlights.ts`에 항목 추가
+- [x] 벨로그 새 글 쓸 때마다 `src/data/posts.ts`에 항목 추가 → GitHub Actions로 자동화함 (Day13)
+- [ ] `src/data/highlights.ts`는 계속 손으로 추가 (여러 날짜를 묶는 편집 판단이 필요해서 자동화 대상 아님)
