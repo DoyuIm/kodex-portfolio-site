@@ -50,8 +50,25 @@ npm run dev
 - 서버 전체 하루 호출 `KODEX_CHAT_DAILY_LIMIT`회(기본 300회)까지만 — 인메모리 카운터라 서버리스 인스턴스가
   재시작되면 리셋될 수 있음 (트래픽이 늘면 Vercel KV 등으로 교체 권장)
 - 한도 초과 시 실제 Gemini 호출 없이 "GitHub에서 전체 코드를 확인해보세요" 안내로 대체
-- 새 벨로그 글을 추가했으면 `kodex-code-review-agent`에서 `fetch_posts.py` → `build_index.py`를 다시 돌리고,
-  그 결과로 나온 `embeddings.json`을 `src/data/kodex-embeddings.json`에 다시 복사해야 챗 위젯이 최신 글을 알아요.
+- 새 벨로그 글 반영은 아래 "임베딩 자동 갱신" 참고 — 수동으로 할 필요 없음
+
+## 임베딩 자동 갱신 (`.github/workflows/sync-kodex-embeddings.yml`)
+
+챗 위젯이 새 벨로그 글을 자동으로 알게 해주는 GitHub Actions 워크플로예요. 매일 06:00(KST)에 실행되고,
+Actions 탭에서 수동으로도 바로 돌릴 수 있어요(`workflow_dispatch`).
+
+동작 순서: `kodex-code-review-agent` 저장소를 체크아웃 → `fetch_posts.py`로 최신 벨로그 글 수집 →
+`build_index.py`로 증분 임베딩(안 바뀐 글은 재임베딩하지 않음) → 결과를 `src/data/kodex-embeddings.json`에
+덮어쓰기 → 바뀐 게 있으면만 커밋·푸시. 푸시되면 Vercel이 알아서 재배포해요.
+
+**한 번만 하면 되는 설정**: 이 저장소(`kodex-portfolio-site`)의 GitHub Settings → Secrets and variables →
+Actions에 `GEMINI_API_KEY` 시크릿을 등록해야 해요. `gh` CLI가 있다면:
+
+```bash
+gh secret set GEMINI_API_KEY --repo DoyuIm/kodex-portfolio-site
+```
+
+값을 붙여넣으라는 프롬프트가 뜨면 기존에 쓰던 Gemini API 키를 입력하면 돼요.
 
 ## 배포
 
