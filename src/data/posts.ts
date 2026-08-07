@@ -86,6 +86,12 @@ export const posts: Post[] = [
     summary: "GitHub Actions로 RAG 인덱스를 매일 자동 갱신하도록 만든 날",
     slug: "kodex-day-13-rag-automation",
   },
+  {
+    day: 14,
+    title: "devlog 자동화 및 사이트 기능 개선",
+    summary: "devlog 목록 자동 동기화 스크립트를 작성하고 도움말 커맨드, OG 이미지, 사용량 대시보드를 구축한 날.",
+    slug: "kodex-day-14-backlog-wrap-up",
+  },
 ];
 
 export function velogUrl(slug: string) {
