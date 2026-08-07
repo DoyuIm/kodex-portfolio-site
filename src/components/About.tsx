@@ -1,5 +1,6 @@
 import Reveal from "@/components/Reveal";
 import { highlights } from "@/data/highlights";
+import usage from "@/data/kodex-usage.json";
 
 export default function About() {
   return (
@@ -32,6 +33,27 @@ export default function About() {
           </Reveal>
         ))}
       </div>
+
+      {usage.updated_at && (
+        <Reveal delay={160 + highlights.length * 60 + 60}>
+          <div className="mt-10 rounded-lg border border-slate/20 px-5 py-4 text-sm text-slate">
+            <span className="font-semibold text-mint">지금까지</span> 리뷰/답변 생성{" "}
+            <span className="font-semibold text-offwhite">{usage.total_generate}번</span>, 검색{" "}
+            <span className="font-semibold text-offwhite">{usage.total_embed}번</span> — CLI와
+            디스코드 봇에서 실제로 호출된 횟수예요.
+            <div className="mt-1 text-xs text-muted">
+              마지막 동기화{" "}
+              {new Date(usage.updated_at).toLocaleDateString("ko-KR", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+              · 이 사이트의 챗 위젯 자체 호출은 별도의 하루 한도로만 관리되고 있어 이 숫자에는
+              포함되지 않아요.
+            </div>
+          </div>
+        </Reveal>
+      )}
     </section>
   );
 }
