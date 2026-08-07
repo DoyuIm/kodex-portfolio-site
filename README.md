@@ -35,8 +35,10 @@ npm run dev
 - `src/components/Reveal.tsx` — 스크롤 진입 시 페이드인 애니메이션 (공용 컴포넌트)
 - `src/components/ChatWidget.tsx` — Kodex 에이전트와 대화하는 플로팅 챗 위젯 (전시용 데모)
 - `src/app/api/kodex-chat/route.ts` — 챗 위젯이 호출하는 API 라우트 (RAG 검색 + 답변 생성)
+- `src/app/api/kodex-usage/route.ts` — 사이트 챗 위젯의 실시간 오늘/누적 호출 수를 읽기 전용으로 노출 (Day15)
+- `src/components/SiteUsageStats.tsx` — 위 API를 호출해 About 섹션에 실시간 숫자를 보여주는 컴포넌트 (Day15)
 - `src/lib/kodex-chat.ts` — `kodex-code-review-agent/ask.py`의 RAG 로직을 TypeScript로 포팅
-- `src/lib/kodex-chat-limit.ts` — 세션당 질문 제한 + 서버 하루 전체 호출 한도
+- `src/lib/kodex-chat-limit.ts` — 세션당 질문 제한 + 서버 하루 전체 호출 한도 (Upstash Redis 기반, Day15)
 - `src/data/kodex-embeddings.json` — `kodex-code-review-agent/embeddings.json` 복사본 (벨로그 글 임베딩)
 - `src/data/projects.ts`, `src/data/posts.ts`, `src/data/highlights.ts` — 콘텐츠 데이터 (새 글/프로젝트 추가 시 여기만 수정하면 됨)
 
@@ -47,8 +49,9 @@ npm run dev
 동작하도록 제한을 걸어뒀어요.
 
 - 방문자(세션)당 질문 `KODEX_CHAT_SESSION_LIMIT`개(기본 8개)까지만 가능 — 쿠키 기반, 6시간 뒤 리셋
-- 서버 전체 하루 호출 `KODEX_CHAT_DAILY_LIMIT`회(기본 300회)까지만 — 인메모리 카운터라 서버리스 인스턴스가
-  재시작되면 리셋될 수 있음 (트래픽이 늘면 Vercel KV 등으로 교체 권장)
+- 서버 전체 하루 호출 `KODEX_CHAT_DAILY_LIMIT`회(기본 300회)까지만 — Day15부터 Upstash Redis(Vercel
+  마켓플레이스 "Upstash for Redis" 연동)에 저장돼서 서버리스 인스턴스가 재시작돼도 안 사라짐.
+  Redis가 아직 연결 안 돼있으면(로컬 개발 등) 인메모리로 자동 폴백함
 - 한도 초과 시 실제 Gemini 호출 없이 "GitHub에서 전체 코드를 확인해보세요" 안내로 대체
 - 새 벨로그 글 반영은 아래 "임베딩 자동 갱신" 참고 — 수동으로 할 필요 없음
 
@@ -75,6 +78,19 @@ gh secret set GEMINI_API_KEY --repo DoyuIm/kodex-portfolio-site
 ```
 
 값을 붙여넣으라는 프롬프트가 뜨면 기존에 쓰던 Gemini API 키를 입력하면 돼요.
+
+## 챗 위젯 사용량을 영구 저장하기 — Upstash Redis 연결 (Day15, 한 번만 하면 되는 설정)
+
+Vercel 대시보드에서 이 프로젝트를 선택 → **Storage** 탭 → **Marketplace Database Storage** →
+**Upstash for Redis** 선택 → Create/Connect. (예전엔 "Vercel KV"라는 자체 상품이었는데, 지금은
+Upstash 연동으로 바뀌었어요 — 환경변수 이름은 그대로 `KV_REST_API_URL`/`KV_REST_API_TOKEN`이라
+코드는 안 바뀝니다.) 연결하면 Vercel이 이 두 환경변수를 프로젝트에 자동으로 추가해줘요. 로컬에서도
+쓰려면 `.env.local`에 같은 값을 복사해두면 되고(Vercel 대시보드 → Settings → Environment Variables
+에서 확인 가능), 비워두면 자동으로 인메모리 방식으로 동작해요(기존과 동일한 한계).
+
+연결 후엔 About 섹션에 "사이트 챗 위젯은 오늘 N회, 누적 M회 호출됐어요"가 실시간으로 표시돼요
+(`/api/kodex-usage`에서 클라이언트가 직접 읽어옴 — CLI+봇 누적처럼 매일 배치 동기화되는 값이
+아니라 매 요청마다 실시간 값).
 
 ## 배포
 

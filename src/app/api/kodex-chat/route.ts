@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
     });
   }
 
-  if (isDailyOverLimit()) {
+  if (await isDailyOverLimit()) {
     return NextResponse.json({
       limited: true,
       reason: "daily",
@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const result = await askKodex(question, apiKey);
-    recordDailyUsage();
+    await recordDailyUsage();
 
     const response = NextResponse.json({
       limited: false,

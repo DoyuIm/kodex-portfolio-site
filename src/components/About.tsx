@@ -1,6 +1,7 @@
 import Reveal from "@/components/Reveal";
 import { highlights } from "@/data/highlights";
 import usage from "@/data/kodex-usage.json";
+import SiteUsageStats from "@/components/SiteUsageStats";
 
 export default function About() {
   return (
@@ -48,9 +49,8 @@ export default function About() {
                 month: "long",
                 day: "numeric",
               })}
-              · 이 사이트의 챗 위젯 자체 호출은 별도의 하루 한도로만 관리되고 있어 이 숫자에는
-              포함되지 않아요.
             </div>
+            <SiteUsageStats />
           </div>
         </Reveal>
       )}
