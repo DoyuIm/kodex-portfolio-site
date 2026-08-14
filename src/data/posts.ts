@@ -92,6 +92,12 @@ export const posts: Post[] = [
     summary: "devlog 목록 자동 동기화 스크립트를 작성하고 도움말 커맨드, OG 이미지, 사용량 대시보드를 구축한 날.",
     slug: "kodex-day-14-backlog-wrap-up",
   },
+  {
+    day: 15,
+    title: "pytest 도입과 PR 자동 리뷰 구현",
+    summary: "pytest 테스트 환경을 구축하고 Redis 전환 및 PR 자동 리뷰 기능을 개발한 날",
+    slug: "kodex-day-15-pytest-pr-review",
+  },
 ];
 
 export function velogUrl(slug: string) {
