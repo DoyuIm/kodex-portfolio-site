@@ -100,6 +100,6 @@ Vercel CLI로 배포되어 있어요 (`vercel` → `vercel --prod`). GitHub 레�
 
 - [x] GitHub 레포로 분리해서 푸시
 - [x] Vercel 프로젝트와 GitHub 레포 연결 (자동 재배포)
-- 커스텀 도메인은 보류 (지금은 기본 `.vercel.app` 주소 사용)
+- [x] 커스텀 도메인 연결 → `doyu-portfolio-site.is-a.dev` (is-a.dev 무료 서브도메인, A + `_vercel` TXT 레코드)
 - [x] 벨로그 새 글 쓸 때마다 `src/data/posts.ts`에 항목 추가 → GitHub Actions로 자동화함 (Day13)
 - [ ] `src/data/highlights.ts`는 계속 손으로 추가 (여러 날짜를 묶는 편집 판단이 필요해서 자동화 대상 아님)

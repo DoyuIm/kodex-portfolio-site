@@ -77,7 +77,7 @@ export default async function Image() {
               marginRight: 16,
             }}
           />
-          kodex-portfolio-site.vercel.app
+          doyu-portfolio-site.is-a.dev
         </div>
       </div>
     ),
