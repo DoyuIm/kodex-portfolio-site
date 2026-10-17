@@ -1,4 +1,5 @@
 import Reveal from "@/components/Reveal";
+import { T } from "@/components/Lang";
 
 const links = [
   { label: "GitHub", href: "https://github.com/DoyuIm" },
@@ -6,7 +7,7 @@ const links = [
   { label: "Instagram", href: "https://www.instagram.com/doro_dev/" },
 ];
 
-const stack = ["Python", "TypeScript", "Gemini API", "Next.js", "Figma"];
+const stack = ["AI Service Planning", "UX Research", "Python", "TypeScript", "Gemini API", "IBM watsonx", "Next.js", "Figma"];
 
 export default function Hero() {
   return (
@@ -25,22 +26,25 @@ export default function Hero() {
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-mint opacity-75" />
             <span className="relative inline-flex h-2 w-2 rounded-full bg-mint" />
           </span>
-          지금 만들고 있어요 · BUILD IN PUBLIC
+          <T ko="AI 서비스 기획자 · 개발자" en="AI SERVICE PLANNER · DEVELOPER" />
         </div>
       </Reveal>
 
       <Reveal delay={80}>
         <h1 className="text-4xl font-extrabold leading-tight sm:text-6xl">
-          AI 에이전트 생태계를
-          <br />
-          직접 만들고 기록합니다
+          <T
+            ko={<>AI 기술과 사용자의 문제를<br />연결합니다</>}
+            en={<>I connect AI technology<br />with real user problems</>}
+          />
         </h1>
       </Reveal>
 
       <Reveal delay={160}>
         <p className="mt-6 max-w-xl text-lg text-slate">
-          코드 리뷰 도우미와 블로그 학습 RAG를 CLI, VS Code 확장으로 만들며
-          과정을 인스타그램과 벨로그에 매일 기록하고 있어요.
+          <T
+            ko="임도유입니다. 인공지능을 전공하고 IBM 인턴십에서 watsonx 기반 챗봇을 기획했어요. 팀 프로젝트에서는 사용자 테스트로 서비스 화면을 개선했고, Kodex AI 에이전트를 혼자 만들어 VS Code 마켓플레이스까지 배포했어요."
+            en="I'm Doyu Lim. I studied artificial intelligence and designed a watsonx-based chatbot during my IBM internship. In team projects I improved products through usability testing, and I built and shipped the Kodex AI agent on my own, all the way to the VS Code Marketplace."
+          />
         </p>
       </Reveal>
 

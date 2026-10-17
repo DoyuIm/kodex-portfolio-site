@@ -32,6 +32,9 @@ npm run dev
 - `src/components/Projects.tsx` — 프로젝트(Kodex) 소개 섹션
 - `src/components/Devlog.tsx` — 벨로그 데브로그 글 목록 (링크는 `src/data/posts.ts`에서 관리)
 - `src/components/Contact.tsx` — 이메일·소셜 링크
+- `src/components/Experience.tsx` — 경력·팀 프로젝트 섹션 (내용은 `src/data/experience.ts`)
+- `src/components/Lang.tsx` — 한/영 전환 (`<T ko="…" en="…" />`, 선택은 브라우저에 저장)
+- `next.config.mjs` — `/interview-copilot`을 GitHub Pages의 [Interview Copilot](https://github.com/DoyuIm/interview-copilot) 앱으로 연결 (rewrite)
 - `src/components/Reveal.tsx` — 스크롤 진입 시 페이드인 애니메이션 (공용 컴포넌트)
 - `src/components/ChatWidget.tsx` — Kodex 에이전트와 대화하는 플로팅 챗 위젯 (전시용 데모)
 - `src/app/api/kodex-chat/route.ts` — 챗 위젯이 호출하는 API 라우트 (RAG 검색 + 답변 생성)
