@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import "./globals.css";
 import ChatWidget from "@/components/ChatWidget";
 import UrlCleaner from "@/components/UrlCleaner";
+import { LangProvider } from "@/components/Lang";
 
 const SITE_URL = "https://doyu-portfolio-site.is-a.dev";
-const SITE_TITLE = "Doyu — AI 에이전트 생태계를 만드는 개발자";
+const SITE_TITLE = "Doyu Lim — AI 서비스 기획자 · 개발자";
 const SITE_DESCRIPTION =
-  "코드 리뷰 도우미, 블로그 학습 RAG를 직접 만들고 기록하는 빌드 인 퍼블릭 포트폴리오";
+  "AI 기술과 사용자의 문제를 연결하는 임도유의 포트폴리오. IBM watsonx 챗봇, Kodex AI 에이전트, UX 개선 프로젝트";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -35,9 +36,11 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className="font-sans">
-        {children}
-        <ChatWidget />
-        <UrlCleaner />
+        <LangProvider>
+          {children}
+          <ChatWidget />
+          <UrlCleaner />
+        </LangProvider>
       </body>
     </html>
   );

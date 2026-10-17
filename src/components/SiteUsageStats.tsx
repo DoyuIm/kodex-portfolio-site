@@ -5,6 +5,7 @@
 // 이건 Upstash Redis에서 매 요청마다 읽는 값이라 클라이언트에서 fetch해서 표시한다.
 
 import { useEffect, useState } from "react";
+import { useLang } from "@/components/Lang";
 
 interface UsageResponse {
   today: number;
@@ -14,6 +15,7 @@ interface UsageResponse {
 
 export default function SiteUsageStats() {
   const [data, setData] = useState<UsageResponse | null>(null);
+  const { lang } = useLang();
 
   useEffect(() => {
     let cancelled = false;
@@ -31,6 +33,16 @@ export default function SiteUsageStats() {
   }, []);
 
   if (!data || data.allTime === 0) return null;
+
+  if (lang === "en") {
+    return (
+      <div className="mt-3 text-xs text-muted">
+        The site chat widget was called <span className="text-offwhite">{data.today}</span> times today,{" "}
+        <span className="text-offwhite">{data.allTime}</span> in total.
+        {!data.persistent && " (Persistent storage not connected yet; may reset on redeploy.)"}
+      </div>
+    );
+  }
 
   return (
     <div className="mt-3 text-xs text-muted">
