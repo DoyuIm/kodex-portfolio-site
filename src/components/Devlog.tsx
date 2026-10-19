@@ -1,22 +1,23 @@
-import { posts, velogUrl } from "@/data/posts";
+import { posts, postLabel, velogUrl } from "@/data/posts";
 import Reveal from "@/components/Reveal";
 import { T } from "@/components/Lang";
 
 export default function Devlog() {
-  const sorted = [...posts].sort((a, b) => b.day - a.day);
+  // 최신 글이 위로. 시리즈마다 번호가 따로라서 day가 아니라 발행 순서(배열 순서)를 뒤집는다.
+  const sorted = [...posts].reverse();
 
   return (
     <section className="mx-auto max-w-3xl px-6 py-24" id="devlog">
       <Reveal>
         <h2 className="mb-2 text-sm font-bold tracking-widest text-mint">DEVLOG</h2>
         <p className="mb-10 text-2xl font-bold sm:text-3xl">
-          <T ko="벨로그에 기록 중인 개발 일지" en="Daily dev log on Velog (in Korean)" />
+          <T ko="벨로그에 기록 중인 개발 일지" en="Dev log on Velog (in Korean)" />
         </p>
       </Reveal>
 
       <div className="flex flex-col divide-y divide-slate/15 rounded-2xl border border-slate/20">
         {sorted.map((post, i) => (
-          <Reveal key={post.day} delay={i * 60}>
+          <Reveal key={post.slug} delay={i * 60}>
             <a
               href={velogUrl(post.slug)}
               target="_blank"
@@ -24,7 +25,7 @@ export default function Devlog() {
               className="group flex items-center justify-between gap-6 px-6 py-5 transition hover:bg-white/[0.03]"
             >
               <div>
-                <p className="mb-1 text-xs font-semibold text-muted">DAY {post.day}</p>
+                <p className="mb-1 text-xs font-semibold text-muted">{postLabel(post)}</p>
                 <p className="font-semibold text-offwhite group-hover:text-mint">
                   {post.title}
                 </p>
