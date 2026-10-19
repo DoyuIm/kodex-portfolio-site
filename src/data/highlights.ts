@@ -1,6 +1,7 @@
 export type Highlight = {
   range: string;
   title: { ko: string; en: string };
+  href?: string;
 };
 
 export const highlights: Highlight[] = [
@@ -12,4 +13,11 @@ export const highlights: Highlight[] = [
   { range: "Day 10–11", title: { ko: "디스코드 봇 + 포트폴리오 챗 위젯으로 Phase 4 마무리", en: "Discord bot + portfolio chat widget (Phase 4)" } },
   { range: "Day 12", title: { ko: "11일간의 여정을 정리한 케이스 스터디", en: "Case study of the first 11 days" } },
   { range: "Day 13", title: { ko: "GitHub Actions로 RAG 인덱스 자동 갱신", en: "Automatic RAG index updates with GitHub Actions" } },
+  { range: "Day 14", title: { ko: "devlog 목록 자동 동기화 + 도움말·OG 이미지·사용량 대시보드", en: "Auto-synced devlog list + help command, OG image, usage dashboard" } },
+  { range: "Day 15", title: { ko: "pytest 테스트 31개 + Redis 전환 + PR 자동 리뷰", en: "31 pytest tests + Redis counters + automatic PR reviews" } },
+  {
+    range: "IC #1",
+    title: { ko: "새 프로젝트 Interview Copilot: 영어 면접 코치를 만들고 배포", en: "New project Interview Copilot: built and shipped an English interview coach" },
+    href: "https://velog.io/@doro/interview-copilot-1-english-interview-coach",
+  },
 ];
