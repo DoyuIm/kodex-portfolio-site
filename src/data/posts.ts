@@ -1,5 +1,9 @@
+export type Series = "kodex" | "interview-copilot";
+
+// 배열은 발행 순서대로 쌓인다 (scripts/sync_devlog.py가 끝에 추가). day는 시리즈 안에서의 번호.
 export type Post = {
   day: number;
+  series?: Series; // 없으면 Kodex
   title: string;
   summary: string;
   slug: string;
@@ -98,7 +102,18 @@ export const posts: Post[] = [
     summary: "pytest 테스트 환경을 구축하고 Redis 전환 및 PR 자동 리뷰 기능을 개발한 날",
     slug: "kodex-day-15-pytest-pr-review",
   },
+  {
+    day: 1,
+    series: "interview-copilot",
+    title: "영어 면접 코치를 직접 만들다",
+    summary: "한국어 이력서를 영어 STAR 스토리로 바꾸고 AI 모의면접까지 되는 Interview Copilot을 만들어 배포한 날",
+    slug: "interview-copilot-1-english-interview-coach",
+  },
 ];
+
+export function postLabel(post: Post) {
+  return post.series === "interview-copilot" ? `INTERVIEW COPILOT #${post.day}` : `DAY ${post.day}`;
+}
 
 export function velogUrl(slug: string) {
   return `https://velog.io/@${VELOG_USER}/${slug}`;

@@ -5,7 +5,8 @@ name: Sync Kodex embeddings, devlog & usage
 # (src/data/kodex-usage.json)를 최신 상태로 유지한다.
 # kodex-code-review-agent(스크립트가 있는 저장소)를 체크아웃해서 fetch_posts.py → build_index.py를
 # 그대로 실행하고, 결과를 이 저장소의 src/data/kodex-embeddings.json에 덮어쓴다.
-# 이어서 scripts/sync_devlog.py가 posts.json에서 아직 posts.ts에 없는 "kodex-day-N-..." 슬러그의
+# 이어서 scripts/sync_devlog.py가 posts.json에서 아직 posts.ts에 없는 "kodex-day-N-..." /
+# "interview-copilot-N-..." 슬러그의
 # 새 글을 찾아 Gemini로 title/summary를 생성해 posts.ts에 자동으로 추가한다.
 # (highlights.ts는 여러 날짜를 묶어 사람이 직접 정리하는 영역이라 자동화 대상이 아님)
 # usage_public.json은 이 워크플로가 만드는 게 아니라, CLI(kodex.py/review.py/ask.py)와 디스코드

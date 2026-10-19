@@ -3,11 +3,12 @@
 devlog 목록 자동 동기화 (Day13 자동화)
 --------------------------------
 kodex-code-review-agent/posts.json(fetch_posts.py 결과)에서 아직 src/data/posts.ts에
-없는 "kodex-day-N-..." 슬러그의 새 벨로그 글을 찾아, Gemini로 title/summary를 생성해서
-posts.ts 배열 끝에 자동으로 추가한다.
+없는 시리즈 슬러그의 새 벨로그 글을 찾아, Gemini로 title/summary를 생성해서
+posts.ts 배열 끝에 발행 순서대로 자동으로 추가한다.
 
+- 대상 시리즈: "kodex-day-N-..."(Kodex), "interview-copilot-N-..."(Interview Copilot)
 - 슬러그가 이미 posts.ts에 있으면 건너뜀 (중복 방지, 재실행해도 안전)
-- kodex-day-N- 형식이 아닌 글(다른 주제의 글 등)은 대상에서 제외
+- 위 형식이 아닌 글(다른 주제의 글 등)은 대상에서 제외
 - highlights.ts는 여러 날짜를 묶어 사람이 직접 정리하는 영역이라 자동화 대상이 아님
 
 사용법:
@@ -22,6 +23,7 @@ import argparse
 import json
 import os
 import re
+from email.utils import parsedate_to_datetime
 from urllib.parse import urlparse
 
 from dotenv import load_dotenv
@@ -29,7 +31,26 @@ from google import genai
 from google.genai import types
 
 CHAT_MODEL = "gemini-flash-latest"
-SLUG_RE = re.compile(r"^kodex-day-(\d+)-")
+# (슬러그 패턴, posts.ts의 series 값). Kodex는 기존 항목처럼 series를 생략한다.
+SERIES = [
+    (re.compile(r"^kodex-day-(\d+)-"), None),
+    (re.compile(r"^interview-copilot-(\d+)-"), "interview-copilot"),
+]
+
+
+def match_series(slug: str):
+    for pattern, series in SERIES:
+        m = pattern.match(slug)
+        if m:
+            return int(m.group(1)), series
+    return None
+
+
+def published_at(post: dict):
+    try:
+        return parsedate_to_datetime(post.get("pub_date", "")).timestamp()
+    except (TypeError, ValueError):
+        return 0
 
 SYSTEM_INSTRUCTION = """당신은 개발자의 "빌드 인 퍼블릭" devlog 글을 포트폴리오 사이트 목록용으로
 짧게 요약하는 도우미입니다. 반드시 다음 형식의 JSON으로만 답하세요:
@@ -82,16 +103,17 @@ def main():
     candidates = []
     for post in posts:
         slug = extract_slug(post.get("link", ""))
-        m = SLUG_RE.match(slug)
-        if not m or slug in existing_slugs:
+        matched = match_series(slug)
+        if not matched or slug in existing_slugs:
             continue
-        candidates.append((int(m.group(1)), slug, post))
+        day, series = matched
+        candidates.append((day, series, slug, post))
 
     if not candidates:
         print("추가할 새 devlog가 없어요.")
         return
 
-    candidates.sort(key=lambda t: t[0])
+    candidates.sort(key=lambda t: published_at(t[3]))
 
     load_dotenv()
     api_key = os.environ.get("GEMINI_API_KEY")
@@ -100,7 +122,7 @@ def main():
     client = genai.Client(api_key=api_key)
 
     new_entries = []
-    for day, slug, post in candidates:
+    for day, series, slug, post in candidates:
         try:
             meta = generate_title_summary(client, post["content"])
             title = (meta.get("title") or post["title"]).strip()
@@ -108,16 +130,19 @@ def main():
         except Exception as e:  # noqa: BLE001
             print(f"⚠️ Day {day}({slug}) 요약 생성 실패, 건너뜀: {e}")
             continue
-        new_entries.append((day, title, summary, slug))
-        print(f"+ Day {day}: {title} ({slug})")
+        new_entries.append((day, series, title, summary, slug))
+        print(f"+ {series or 'kodex'} {day}: {title} ({slug})")
 
     if not new_entries:
         print("추가된 항목이 없어요.")
         return
 
     entry_blocks = "".join(
-        f'  {{\n    day: {day},\n    title: "{title}",\n    summary: "{summary}",\n    slug: "{slug}",\n  }},\n'
-        for day, title, summary, slug in new_entries
+        f'  {{\n    day: {day},\n'
+        + (f'    series: "{series}",\n' if series else "")
+        + f'    title: {json.dumps(title, ensure_ascii=False)},\n'
+        f'    summary: {json.dumps(summary, ensure_ascii=False)},\n    slug: "{slug}",\n  }},\n'
+        for day, series, title, summary, slug in new_entries
     )
     updated, n = re.subn(r"\n\];", f"\n{entry_blocks}];", ts_text, count=1)
     if n == 0:
